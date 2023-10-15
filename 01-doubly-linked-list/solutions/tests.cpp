@@ -69,6 +69,8 @@ TEST_CASE("testing the removing of a Node in an empty list")
     // Създаваме празен списък
     DoublyLinkedList<int> list;
     
+    // Проверяваме, че head и last за празен списък хвърлят грешка 
+    // https://github.com/doctest/doctest/blob/master/doc/markdown/assertions.md#exceptions
     CHECK_THROWS_AS(list.head(), std::exception);
     CHECK_THROWS_AS(list.last(), std::exception);
 }
