@@ -57,3 +57,7 @@
 * `void edit(std::function<std::string(std::string)> editFunction)` - която изпълнява `editFunction` върху текущото текстово съдържание и запазва резултата като новата версия на съдържанието
 * `void print()` - отпечатва текущото съдържание
 * `void undo()` - връща текста във формата му преди последната промяна
+
+
+
+https://meet.google.com/dnr-maxy-qht
