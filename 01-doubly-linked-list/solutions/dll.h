@@ -41,6 +41,7 @@ public:
     void print();
     void reverse();
     void removeDuplicates();
+    void removeDuplicatesSorted();
 };
 
 template <typename T>
@@ -325,6 +326,7 @@ void DoublyLinkedList<T>::reverse()
     end = tmp;
 }
 
+// O(n^2)
 template <typename T>
 void DoublyLinkedList<T>::removeDuplicates()
 {
@@ -349,5 +351,34 @@ void DoublyLinkedList<T>::removeDuplicates()
         }
 
         current = current->next;
+    }
+}
+
+// O(n)
+template <typename T>
+void DoublyLinkedList<T>::removeDuplicatesSorted()
+{
+    if(start == end)
+        return;
+
+    Node<T> *current = start;
+    Node<T> *next = current->next;
+
+    while (current != end)
+    {
+        if (current->data == next->data)
+        {
+            remove(next);
+            next = current->next;
+        }
+        else
+        {
+            current = current->next;
+            if (next != nullptr)
+                next = next->next;    
+        }
+
+
+        
     }
 }
