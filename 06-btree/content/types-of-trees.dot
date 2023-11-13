@@ -1,0 +1,51 @@
+digraph G {
+    subgraph cluster_perfect {
+        label = "Perfect Binary Tree"
+        18 -> 15
+        18 -> 30
+        15 -> 46
+        15 -> 50
+        30 -> 40
+        30 -> 100
+    }
+
+    subgraph cluster_search {
+        label = "Binary Search Tree"
+        33 -> 12
+        33 -> 42
+
+        12 -> 8
+        8 -> 4
+        8 -> 10
+
+        4 -> 3
+
+        42 -> 55
+    }
+
+    subgraph cluster_avl {
+        label = "AVL Tree"
+        a1[label="33"]
+        a2[label="12"]
+        a5[label="4"]
+        a8[label="3"]
+        a4[label="8"]
+        a6[label="10"]
+        a3[label="42"]
+        a7[label="55"]
+
+        a2 -> a6
+        a2 -> a3
+
+        a6 -> a5
+        a6 -> a4
+
+        a3 -> a1
+        a3 -> a7
+
+        a5 -> a8
+        
+
+
+    }   
+}
