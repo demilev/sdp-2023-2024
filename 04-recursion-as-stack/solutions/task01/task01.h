@@ -85,16 +85,3 @@ bool pathExists(bool matrix[100][100], int rows, int cols)
 {
     return pathExistsHelper(matrix, rows, cols, 0, 0, rows - 1, cols - 1);
 }
-
-int main()
-{
-    bool labyrinth[100][100] = {{1, 0, 0, 0},
-                                {1, 1, 1, 1},
-                                {0, 1, 0, 1},
-                                {0, 1, 0, 1}};
-
-    std::cout << "Path exists recursive: " << pathExists(labyrinth, 4, 4) << std::endl;
-    std::cout << "Path exists stack: " << pathExistsStack(labyrinth, 4, 4) << std::endl;
-
-    return 0;
-}

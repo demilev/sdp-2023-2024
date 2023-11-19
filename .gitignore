@@ -37,3 +37,6 @@
 
 # Build folder
 */build
+
+# Temporary folder
+tmp

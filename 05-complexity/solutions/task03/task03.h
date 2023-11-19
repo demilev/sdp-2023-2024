@@ -61,25 +61,3 @@ std::list<int> sum(std::list<int> first, std::list<int> second)
 
     return result;
 }
-
-int main()
-{
-    std::list<int> first, second;
-    first.push_front(3);
-    first.push_front(2);
-    first.push_front(4);
-    first.push_front(1);
-
-    second.push_front(7);
-    second.push_front(8);
-    second.push_front(3);
-
-    std::list<int> result = sum(first, second);
-
-    for (int i : result)
-    {
-        std::cout << i << " ";
-    }
-
-    return 0;
-}

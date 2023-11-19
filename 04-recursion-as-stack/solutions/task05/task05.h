@@ -82,21 +82,3 @@ std::list<int> toposort(std::vector<int> &tasks, std::vector<std::vector<int>> &
 
     return order;
 }
-
-int main()
-{
-    std::vector<int> tasks = {0, 1, 2, 3, 4};
-    std::vector<std::vector<int>> dependencies = {{3, 4}, {2}, {}, {4}, {}};
-
-    std::list<int> order = toposort(tasks, dependencies);
-
-    std::cout << "Topological order: " << std::endl;
-    for (int task : order)
-    {
-        std::cout << task << " ";
-    }
-
-    std::cout << std::endl;
-
-    return 0;
-}

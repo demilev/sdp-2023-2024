@@ -77,19 +77,3 @@ void electionResults(std::list<int> votes)
 
     std::cout << currentCount << " vote" << (currentCount > 1 ? "s" : "") << " for " << current << std::endl;
 }
-
-int main()
-{
-    std::list<int> votes;
-    votes.push_back(1);
-    votes.push_back(83);
-    votes.push_back(32);
-    votes.push_back(28);
-    votes.push_back(32);
-    votes.push_back(1);
-    votes.push_back(32);
-
-    electionResults(votes);
-
-    return 0;
-}

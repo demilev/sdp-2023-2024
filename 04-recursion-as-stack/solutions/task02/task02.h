@@ -48,12 +48,3 @@ int evaluate(std::vector<std::string> operations)
 
     return result;
 }
-
-int main()
-{
-    std::vector<std::string> operations = {"5", "2", "C", "D", "+"};
-
-    std::cout << evaluate(operations) << std::endl;
-
-    return 0;
-}
