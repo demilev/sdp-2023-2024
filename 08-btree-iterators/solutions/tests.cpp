@@ -24,7 +24,7 @@ int main()
     n1->left = n3;
     n1->right = n4;
 
-    n2->right = n5;
+    n2->left = n5;
 
     n4->left = n6;
     n4->right = n7;
@@ -34,7 +34,30 @@ int main()
 
     BTree<int> tree(root);
 
-    tree.printDot();
+    // tree.printDot();
+
+    std::vector<int> inorder = tree.inorder();
+
+    for (int i : inorder)
+    {
+        std::cout << i << " ";
+    }
+
+    std::cout << std::endl;
+
+    tree.printInorderStack();
+
+    std::cout << std::endl;
+    
+    for (int& i : tree)
+    {
+        i += 2;
+    }
+
+    for (int i : tree)
+    {
+        std::cout << i << " ";
+    }
 
     return 0;
 }

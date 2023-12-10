@@ -326,9 +326,9 @@ void BSTree<T>::remove(Node<T> *&current, const T &data)
         remove(current->right, minRight);
 
         // Вариант 2
-        // Т minLeft = minSorted(current->left);
-        // current->data = minLeft;
-        // remove(current->left, minLeft);
+        // Т maxLeft = maxSorted(current->left);
+        // current->data = maxLeft;
+        // remove(current->left, maxLeft);
     }
 
     return;

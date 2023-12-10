@@ -1,6 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include <stack>
+#include <functional>
 
 template <typename T>
 struct Node
@@ -14,6 +17,27 @@ struct Node
 };
 
 template <typename T>
+struct Operation
+{
+    Node<T> *node;
+    char type; // 'r' - recursive, 'p' - process
+};
+
+template <typename T>
+class BTreeIterator
+{
+public:
+    BTreeIterator(Node<T> *);
+    BTreeIterator<T> &operator++();
+    T& operator*();
+    bool operator!=(const BTreeIterator<T> &);
+
+private:
+    std::stack<Operation<T>> ops;
+    void traverse();
+};
+
+template <typename T>
 class BTree
 {
 private:
@@ -24,6 +48,9 @@ private:
     Node<T> *copy(Node<T> *);
     void cleanup(Node<T> *);
 
+    void inorder(Node<T> *, std::vector<T> &);
+    void preoder(Node<T> *, std::vector<T> &);
+
 public:
     BTree();
     BTree(Node<T> *);
@@ -32,6 +59,14 @@ public:
     BTree<T> &operator=(const BTree<T> &);
 
     void printDot();
+
+    std::vector<T> inorder();
+    std::vector<T> preoder();
+
+    void printInorderStack();
+    BTreeIterator<T> begin();
+    BTreeIterator<T> end();
+    void map(std::function<T(T)>);
 };
 
 template <typename T>
@@ -39,6 +74,60 @@ Node<T>::Node(const T &data) : data(data), left(nullptr), right(nullptr) {}
 
 template <typename T>
 Node<T>::Node(const T &data, Node<T> *left, Node<T> *right) : data(data), left(left), right(right) {}
+
+template <typename T>
+void BTreeIterator<T>::traverse()
+{
+    while (!ops.empty() && ops.top().type != 'p')
+    {
+        Operation<T> current = ops.top();
+        ops.pop();
+
+        if (current.node != nullptr)
+        {
+            ops.push({current.node->right, 'r'});
+            ops.push({current.node, 'p'});
+            ops.push({current.node->left, 'r'});
+        }
+    }
+}
+
+template <typename T>
+BTreeIterator<T>::BTreeIterator(Node<T> *root)
+{
+    ops.push({root, 'r'});
+    traverse();
+}
+
+template <typename T>
+T& BTreeIterator<T>::operator*()
+{
+    return ops.top().node->data;
+}
+
+template <typename T>
+BTreeIterator<T> &BTreeIterator<T>::operator++()
+{
+    ops.pop();
+    traverse();
+    return *this;
+}
+
+template <typename T>
+bool BTreeIterator<T>::operator!=(const BTreeIterator<T>& other)
+{
+    if (ops.empty())
+    {
+        return !other.ops.empty();
+    }
+
+    if (other.ops.empty())
+    {
+        return !ops.empty();
+    }
+
+    return ops.top().node != other.ops.top().node;
+}
 
 template <typename T>
 BTree<T>::BTree() : root(nullptr) {}
@@ -117,9 +206,108 @@ void BTree<T>::printDot(Node<T> *current)
 }
 
 template <typename T>
+void BTree<T>::inorder(Node<T> *current, std::vector<T> &result)
+{
+    if (current == nullptr)
+    {
+        return;
+    }
+
+    // ляво
+    inorder(current->left, result);
+
+    // корен
+    result.push_back(current->data);
+
+    // дясно
+    inorder(current->right, result);
+}
+
+template <typename T>
+void BTree<T>::preoder(Node<T> *current, std::vector<T> &result)
+{
+    if (current == nullptr)
+    {
+        return;
+    }
+    // корен
+    result.push_back(current->data);
+
+    // ляво
+    preoder(current->left, result);
+
+    // дясно
+    preoder(current->right, result);
+}
+
+template <typename T>
 void BTree<T>::printDot()
 {
     std::cout << "digraph G {" << std::endl;
     printDot(root);
     std::cout << "}" << std::endl;
+}
+
+template <typename T>
+std::vector<T> BTree<T>::inorder()
+{
+    std::vector<T> result;
+    inorder(root, result);
+    return result;
+}
+
+template <typename T>
+std::vector<T> BTree<T>::preoder()
+{
+    std::vector<T> result;
+    preoder(root, result);
+    return result;
+}
+
+template <typename T>
+void BTree<T>::printInorderStack()
+{
+    std::stack<Operation<T>> ops;
+    ops.push({root, 'r'});
+
+    while (!ops.empty())
+    {
+        Operation<T> current = ops.top();
+        ops.pop();
+
+        if (current.node != nullptr)
+        {
+            if (current.type == 'p')
+            {
+                std::cout << current.node->data << " ";
+            }
+            if (current.type == 'r')
+            {
+                ops.push({current.node->right, 'r'});
+                ops.push({current.node, 'p'});
+                ops.push({current.node->left, 'r'});
+            }
+        }
+    }
+}
+
+template <typename T>
+BTreeIterator<T> BTree<T>::begin()
+{
+    return BTreeIterator<T>(root);
+}
+
+template <typename T>
+BTreeIterator<T> BTree<T>::end()
+{
+    return BTreeIterator<T>(nullptr);
+}
+
+template <typename T>
+void BTree<T>::map(std::function<T(T)> f)
+{
+    for (T& element: *this)
+    {
+        element = f(element);
+    }
 }
