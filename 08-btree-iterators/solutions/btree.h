@@ -29,10 +29,12 @@ class BTreeIterator
 public:
     BTreeIterator(Node<T> *);
     BTreeIterator<T> &operator++();
-    T& operator*();
+    T &operator*();
     bool operator!=(const BTreeIterator<T> &);
 
 private:
+    // Ще пазим стек с операции, на върху на който винаги ще искаме да има операция за обработка/извличане на елемент.
+    // Операторът * ще връща този елемент на върха на стека, а операторът ++ ще маха елемента от върха на стека и ще го развива, докато друг такъв не е на върха на стека.
     std::stack<Operation<T>> ops;
     void traverse();
 };
@@ -78,6 +80,7 @@ Node<T>::Node(const T &data, Node<T> *left, Node<T> *right) : data(data), left(l
 template <typename T>
 void BTreeIterator<T>::traverse()
 {
+    // Развиваме стека, докато на върха му няма елемент за извличане на елемент
     while (!ops.empty() && ops.top().type != 'p')
     {
         Operation<T> current = ops.top();
@@ -100,7 +103,7 @@ BTreeIterator<T>::BTreeIterator(Node<T> *root)
 }
 
 template <typename T>
-T& BTreeIterator<T>::operator*()
+T &BTreeIterator<T>::operator*()
 {
     return ops.top().node->data;
 }
@@ -114,7 +117,7 @@ BTreeIterator<T> &BTreeIterator<T>::operator++()
 }
 
 template <typename T>
-bool BTreeIterator<T>::operator!=(const BTreeIterator<T>& other)
+bool BTreeIterator<T>::operator!=(const BTreeIterator<T> &other)
 {
     if (ops.empty())
     {
@@ -306,7 +309,7 @@ BTreeIterator<T> BTree<T>::end()
 template <typename T>
 void BTree<T>::map(std::function<T(T)> f)
 {
-    for (T& element: *this)
+    for (T &element : *this)
     {
         element = f(element);
     }

@@ -1,4 +1,5 @@
 #include "bstree.h"
+#include "treeset.h"
 #include <iostream>
 
 int main()
@@ -22,7 +23,6 @@ int main()
     Node<int> *n11 = new Node<int>(62);
 
     Node<int> *n12 = new Node<int>(2);
-
 
     root->left = n1;
     root->right = n2;
@@ -61,5 +61,16 @@ int main()
     tree.remove(8);
     tree.printDot();
 
+    std::vector<int> range = tree.range(14, 48);
+    std::cout << "The numbers between 14 and 48 in the tree are: " << std::endl;
+    for (int i : range)
+        std::cout << i << " ";
+    std::cout << std::endl;
+
+    std::vector<int> numbers({0, 3, 0, 15, 4, 2, 3, 0, 1, 1, 8});
+    std::cout << "Number of unique elements: " << countUniques(numbers) << std::endl;
+    std::cout << "Numbers with sum 19 exist: " << std::boolalpha << twoSum(numbers, 19) << std::endl;
+    std::cout << "Numbers with sum 13 exist: " << std::boolalpha << twoSum(numbers, 13) << std::endl;
+    
     return 0;
 }

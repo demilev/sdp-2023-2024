@@ -23,7 +23,7 @@
 ![bst](https://upload.wikimedia.org/wikipedia/commons/9/9b/Binary_search_tree_example.gif)
 
 
-## Задачи - [Решения](./solutions/bstree/bstree.h)
+## Задачи - [Решения](./solutions/bstree)
 
 Направете си копие на класа `BTree` от миналата седмица като запазите само голямата четворка и метода за печатане в `dot` формат. Кръстете новия клас `BSTree`.
 

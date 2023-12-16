@@ -18,6 +18,7 @@ class BSTree
 {
 private:
     Node<T> *root;
+    int numberOfElements;
 
     void printDot(Node<T> *);
 
@@ -34,6 +35,7 @@ private:
     bool member(Node<T> *, const T &);
     void add(Node<T> *&, const T &);
     void remove(Node<T> *&, const T &);
+    void range(Node<T> *, const T &, const T &, std::vector<T> &);
 
 public:
     BSTree();
@@ -49,6 +51,9 @@ public:
     bool member(const T &);
     void add(const T &);
     void remove(const T &);
+
+    int size();
+    std::vector<T> range(const T &, const T &);
 };
 
 template <typename T>
@@ -58,10 +63,10 @@ template <typename T>
 Node<T>::Node(const T &data, Node<T> *left, Node<T> *right) : data(data), left(left), right(right) {}
 
 template <typename T>
-BSTree<T>::BSTree() : root(nullptr) {}
+BSTree<T>::BSTree() : root(nullptr), numberOfElements(0) {}
 
 template <typename T>
-BSTree<T>::BSTree(Node<T> *root) : root(root) {}
+BSTree<T>::BSTree(Node<T> *root) : root(root), numberOfElements(0) {}
 
 template <typename T>
 BSTree<T>::~BSTree()
@@ -73,6 +78,7 @@ template <typename T>
 BSTree<T>::BSTree(const BSTree<T> &other) : root(nullptr)
 {
     root = copy(other.root);
+    numberOfElements = other.numberOfElements;
 }
 
 template <typename T>
@@ -133,6 +139,8 @@ void BSTree<T>::printDot(Node<T> *current)
     printDot(current->right);
 }
 
+// Версия на функцията за намиране на най-малък елемент, в която не се въпзолзваме от факта, че
+// дървото е наредено, а просто го обхождаме цялото.
 template <typename T>
 T BSTree<T>::min(Node<T> *current)
 {
@@ -160,6 +168,8 @@ T BSTree<T>::min(Node<T> *current)
     return std::min(minL, std::min(current->data, minR));
 }
 
+// Версия на функцията за намиране на най-голям елемент, в която не се въпзолзваме от факта, че
+// дървото е наредено, а просто го обхождаме цялото.
 template <typename T>
 T BSTree<T>::max(Node<T> *current)
 {
@@ -187,12 +197,15 @@ T BSTree<T>::max(Node<T> *current)
     return std::max(minL, std::max(current->data, minR));
 }
 
+// Версия на функцията за намиране на най-малък елемент, в която се въпзолзваме от факта, че
+// дървото е наредено.
 template <typename T>
 T BSTree<T>::minSorted(Node<T> *current)
 {
     if (current == nullptr)
         throw "the tree is empty";
 
+    // Най-малкият елемент е този който е най-вляво в дървото(този който няма ляв наследник)
     while (current->left != nullptr)
     {
         current = current->left;
@@ -201,12 +214,15 @@ T BSTree<T>::minSorted(Node<T> *current)
     return current->data;
 }
 
+// Версия на функцията за намиране на най-голям елемент, в която се въпзолзваме от факта, че
+// дървото е наредено.
 template <typename T>
 T BSTree<T>::maxSorted(Node<T> *current)
 {
     if (current == nullptr)
         throw "the tree is empty";
 
+    // Най-големият елемент е този който е най-вдясно в дървото(този който няма десен наследник)
     while (current->right != nullptr)
     {
         current = current->right;
@@ -219,18 +235,22 @@ template <typename T>
 bool BSTree<T>::isBST(Node<T> *current)
 {
 
+    // Празното дърво е наредено
     if (current == nullptr)
         return true;
 
     T maxLeft = current->left != nullptr ? max(current->left) : current->data;
     T minRight = current->right != nullptr ? min(current->right) : current->data;
 
-    return current->data >= maxLeft &&
-           current->data <= minRight &&
-           isBST(current->left) &&
-           isBST(current->right);
+    // Едно дърво е наредено, ако:
+    return current->data >= maxLeft &&  // коренът е по-голям от всички елементи в лявото поддърво
+           current->data <= minRight && // коренът е по-малък от всички елементи в дясното поддърво
+           isBST(current->left) &&      // лявото поддърво е наредено
+           isBST(current->right);       // дясното поддърво е наредено
 }
 
+// Версия на функцията за търсене на елемент в дърво, в която се въпзолзваме от факта, че
+// дървото е наредено.
 template <typename T>
 bool BSTree<T>::member(Node<T> *current, const T &data)
 {
@@ -240,9 +260,13 @@ bool BSTree<T>::member(Node<T> *current, const T &data)
     if (current->data == data)
         return true;
 
+    // Ако търсеният елемент е по-малък от корена, го търсим в лявото поддърво.
+    // Няма смисъл да го търсим в дясното поддърво, защото там всички елементи са по-големи от корена.
     if (current->data > data)
         return member(current->left, data);
 
+    // Ако търсеният елемент е по-голям от корена, го търсим в дясното поддърво.
+    // Няма смисъл да го търсим в лявото поддърво, защото там всички елементи са по-малки от корена.
     if (current->data < data)
         return member(current->right, data);
 
@@ -252,18 +276,22 @@ bool BSTree<T>::member(Node<T> *current, const T &data)
 template <typename T>
 void BSTree<T>::add(Node<T> *&current, const T &data)
 {
+    // Добавяне в празното дърво
     if (current == nullptr)
     {
+        numberOfElements++;
+        // Създаваме нов възел
         current = new Node<T>(data);
     }
 
+    // Трябва да добавим новия елемент, така че  да запазим наредбата. Т.е. ако е по-малък от текущия, трябва да го добавим в лявото поддърво.
     if (current->data > data)
-
     {
         add(current->left, data);
         return;
     }
 
+    // Ако е по-голям от текущия, трябва да го добавим в дясното поддърво.
     if (current->data < data)
     {
         add(current->right, data);
@@ -273,6 +301,7 @@ void BSTree<T>::add(Node<T> *&current, const T &data)
     return;
 }
 
+// За повече информация - https://github.com/demilev/sdp-2023-2024/blob/main/extra/bst-remove.md
 template <typename T>
 void BSTree<T>::remove(Node<T> *&current, const T &data)
 {
@@ -298,6 +327,7 @@ void BSTree<T>::remove(Node<T> *&current, const T &data)
     if (current->left == nullptr && current->right == nullptr)
     {
         delete current;
+        numberOfElements--;
         current = nullptr;
         return;
     }
@@ -309,6 +339,7 @@ void BSTree<T>::remove(Node<T> *&current, const T &data)
         Node<T> *tmp = current;
         current = current->right;
         delete tmp;
+        numberOfElements--;
     }
     // Трием елемент с един наследник
     else if (current->left != nullptr && current->right == nullptr)
@@ -317,6 +348,7 @@ void BSTree<T>::remove(Node<T> *&current, const T &data)
         Node<T> *tmp = current;
         current = current->left;
         delete tmp;
+        numberOfElements--;
     }
     else
     {
@@ -332,6 +364,24 @@ void BSTree<T>::remove(Node<T> *&current, const T &data)
     }
 
     return;
+}
+
+template <typename T>
+void BSTree<T>::range(Node<T> *current, const T &from, const T &to, std::vector<T> &result)
+{
+    if (current == nullptr)
+        return;
+
+    // Ако текущият елемент е по-голям от долната граница, обхождаме и лявото поддърво
+    if (current->data > from)
+        range(current->left, from, to, result);
+
+    if (current->data > from && current->data < to)
+        result.push_back(current->data);
+
+    // Ако текущият елемент е по-малък от горната граница, обхождаме и дясното поддърво
+    if (current->data < to)
+        range(current->right, from, to, result);
 }
 
 template <typename T>
@@ -376,4 +426,18 @@ template <typename T>
 void BSTree<T>::remove(const T &data)
 {
     remove(root, data);
+}
+
+template <typename T>
+int BSTree<T>::size()
+{
+    return numberOfElements;
+}
+
+template <typename T>
+std::vector<T> BSTree<T>::range(const T &from, const T &to)
+{
+    std::vector<T> result;
+    range(root, from, to, result);
+    return result;
 }
