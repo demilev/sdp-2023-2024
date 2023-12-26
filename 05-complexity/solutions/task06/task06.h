@@ -53,7 +53,7 @@ void sort(std::list<int> &l)
 
 void electionResults(std::list<int> votes)
 {
-    // О(nlgn)
+    // О(nlgn) - време, О(1) - памет
     sort(votes);
 
     // Веднъж сортиран списък с гласове, трябва просто да бъде обходен и да преброим гласовете за всяка партия.

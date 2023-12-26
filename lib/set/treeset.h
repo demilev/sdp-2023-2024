@@ -2,7 +2,7 @@
 #pragma once
 
 #include "set.h"
-#include "bstree/bstree.h"
+#include "../bstree/bstree.h"
 
 template <typename T>
 class TreeSet : public Set<T>
