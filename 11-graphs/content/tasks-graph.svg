@@ -1,0 +1,61 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="225pt" height="188pt" viewBox="0.00 0.00 224.5 188">
+<g id="graph0" class="graph" transform="translate(4,184) scale(1)" data-name="G">
+
+<polygon fill="white" stroke="none" points="-4,4 -4,-184 220.5,-184 220.5,4 -4,4"/>
+<!-- 1 -->
+<g id="node1" class="node" pointer-events="visible" data-name="1">
+
+<ellipse fill="none" stroke="black" cx="47.25" cy="-162" rx="47" ry="18"/>
+<text text-anchor="middle" x="47.25" y="-157.8" font-family="Times,serif" font-size="14.00">Задача 1</text>
+</g>
+<!-- 2 -->
+<g id="node2" class="node" pointer-events="visible" data-name="2">
+
+<ellipse fill="none" stroke="black" cx="104.25" cy="-90" rx="47" ry="18"/>
+<text text-anchor="middle" x="104.25" y="-85.8" font-family="Times,serif" font-size="14.00">Задача 2</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge1" class="edge" data-name="1-&gt;2">
+
+<path fill="none" stroke="black" d="M60.76,-144.41C67.57,-136.04 75.99,-125.71 83.59,-116.37"/>
+<polygon fill="black" stroke="black" points="86.28,-118.61 89.88,-108.64 80.85,-114.19 86.28,-118.61"/>
+</g>
+<!-- 3 -->
+<g id="node3" class="node" pointer-events="visible" data-name="3">
+
+<ellipse fill="none" stroke="black" cx="169.25" cy="-162" rx="47" ry="18"/>
+<text text-anchor="middle" x="169.25" y="-157.8" font-family="Times,serif" font-size="14.00">Задача 3</text>
+</g>
+<!-- 1&#45;&gt;3 -->
+<g id="edge2" class="edge" data-name="1-&gt;4" data-comment="1-&gt;3">
+
+<path fill="none" stroke="black" d="M43.61,-143.78C40.54,-125.22 38.1,-95.22 48.25,-72 53.46,-60.07 62.79,-49.56 72.36,-41.11"/>
+<polygon fill="black" stroke="black" points="74.42,-43.95 79.94,-34.9 69.98,-38.53 74.42,-43.95"/>
+</g>
+<!-- 2&#45;&gt;1 -->
+<g id="edge5" class="edge" data-name="2-&gt;4" data-comment="2-&gt;1">
+
+<path fill="none" stroke="black" d="M104.25,-71.7C104.25,-64.41 104.25,-55.73 104.25,-47.54"/>
+<polygon fill="black" stroke="black" points="107.75,-47.62 104.25,-37.62 100.75,-47.62 107.75,-47.62"/>
+</g>
+<!-- 5 -->
+<g id="edge4" class="edge" data-name="3-&gt;2" data-comment="5">
+
+<path fill="none" stroke="black" d="M154.17,-144.76C146.05,-136.02 135.87,-125.05 126.82,-115.31"/>
+<polygon fill="black" stroke="black" points="129.64,-113.2 120.27,-108.26 124.51,-117.97 129.64,-113.2"/>
+</g>
+<!-- 2&#45;&gt;5 -->
+<!-- 3&#45;&gt;4 -->
+<g id="edge3" class="edge" data-name="3-&gt;4">
+
+<path fill="none" stroke="black" d="M170.95,-143.63C172.02,-124.95 171.49,-94.86 160.25,-72 154.51,-60.32 145.05,-49.87 135.53,-41.39"/>
+<polygon fill="black" stroke="black" points="137.96,-38.86 128.03,-35.16 133.48,-44.24 137.96,-38.86"/>
+</g>
+<g id="node4" class="node" pointer-events="visible" data-name="4" data-comment="3-&gt;4">
+
+<ellipse fill="none" stroke="black" cx="104.25" cy="-18" rx="47" ry="18"/>
+<text text-anchor="middle" x="104.25" y="-13.8" font-family="Times,serif" font-size="14.00">Задача 4</text>
+</g>
+</g>
+</svg>

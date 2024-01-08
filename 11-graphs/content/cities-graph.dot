@@ -1,0 +1,15 @@
+digraph G {
+  1 [label="Sofia"]
+  2 [label="Varna"]
+  3 [label="Paris"]
+  4 [label="London"]
+
+  1 -> 2
+  2 -> 1
+
+  1 -> 3
+  3 -> 1
+
+  3 -> 4
+  4 -> 3  
+}

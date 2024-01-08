@@ -1,0 +1,12 @@
+digraph G {
+  1 [label="Ivan"]
+  2 [label="Eva"]
+  3 [label="Georgi"]
+  4 [label="Zara"]
+
+  1 -> 2
+  1 -> 4
+
+  3 -> 4
+  2 -> 4
+}
