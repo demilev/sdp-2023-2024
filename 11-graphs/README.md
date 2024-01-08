@@ -2,7 +2,7 @@
 
 ## Граф
 
-$ V = \{v_1, v_2, v_3, \ldots, v_n\}, |V| = n $
+$V = \{v_1, v_2, v_3, \ldots, v_n\}, |V| = n$
 
 $Е \subset V \times V = \{(v_{i_1}, v_{j_1}), (v_{i_2}, v_{j_2}), \ldots, (v_{i_m}, v_{j_m})\}, |E| = m$
 
