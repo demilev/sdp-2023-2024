@@ -223,6 +223,42 @@ std::list<std::list<int>> allPaths(int from, int to, Graph &graph)
     return allPaths;
 }
 
+// Функция за топологическо сортиране. Абсолютно аналогична на dfsVisit, но с тази разлика, че
+// добавяме текущия връх в резултата чак след като сме обходили всичките му наследници.
+void topoVisit(int vertex, Graph &graph, std::unordered_set<int> &visited, std::list<int> &topoSort)
+{
+    visited.insert(vertex);
+
+    std::list<int> neighbours = graph.getAdjacent(vertex);
+
+    for (int n : neighbours)
+    {
+        if (visited.count(n) == 0)
+        {
+            dfsVisit(n, graph, visited, topoSort);
+        }
+    }
+
+    // Чак след като сме обходили всичките наследници на текущия връх, можем да го сложим най-отпред в наредбата.
+    // Така гарантираме, че ще е преди съседите си в наредбата.
+    topoSort.push_front(vertex);
+}
+
+std::list<int> topoSort(Graph &graph)
+{
+    std::unordered_set<int> visited;
+    std::list<int> topoSort;
+
+    for (int vertex : graph.getVertices())
+    {
+        // Докато има непосетени върхове в графа, ги посещаваме
+        if (visited.count(vertex) == 0)
+            topoVisit(vertex, graph, visited, topoSort);
+    }
+
+    return topoSort;
+}
+
 int main()
 {
     Graph g;
@@ -268,7 +304,7 @@ int main()
     std::unordered_set<int> visited;
     bfsVisit(1, g, visited, bfsOrder);
 
-    std::cout << "BFS order of the graph: ";
+    std::cout << "BFS order of the graph starting from vertex 1: ";
     printList(bfsOrder);
 
     std::list<std::list<int>> allPathsFrom4to5 = allPaths(4, 5, g);
@@ -278,6 +314,11 @@ int main()
     {
         printList(path);
     }
+
+    std::list<int> topoOrder = topoSort(g);
+
+    std::cout << "Topological sorting of the graph: ";
+    printList(topoOrder);
 
     return 0;
 }
