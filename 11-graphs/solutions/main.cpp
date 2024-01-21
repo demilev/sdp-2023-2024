@@ -1,6 +1,16 @@
 #include "graph.h"
 #include <unordered_set>
 
+void printList(const std::list<int> &l)
+{
+    for (int el : l)
+    {
+        std::cout << el << " ";
+    }
+
+    std::cout << std::endl;
+}
+
 // Функция, която намира входящата степ на връх - броят на ребрата към този връх
 int numberOfParents(int vertex, Graph &graph)
 {
@@ -106,6 +116,113 @@ std::list<int> dfs(Graph &graph)
     return dfsOrder;
 }
 
+// Функция, която пуска БФС обхождане от даден връх
+void bfsVisit(int vertex, Graph &graph, std::unordered_set<int> &visited, std::list<int> &bfsOrder)
+{
+    // Списък, в който ще трупаме елементите за обхождане.
+    // Най-отпред ще стои текущия връх за обхождане, а новите ще добавяме най-отзад.
+    // Т.е. ще ползваме списъка като опашка
+    std::list<int> toVisit;
+    toVisit.push_back(vertex);
+    visited.insert(vertex);
+
+    // Докато има върхове за обхождаме
+    while (!toVisit.empty())
+    {
+        // Вземаме текущия
+        int current = toVisit.front();
+        toVisit.pop_front();
+
+        // Обхождаме съседите му
+        std::list<int> neighbours = graph.getAdjacent(current);
+        for (int n : neighbours)
+        {
+            // Тези които са непосетени,
+            if (visited.count(n) == 0)
+            {
+                // ги посещаваме
+                visited.insert(n);
+                toVisit.push_back(n);
+            }
+        }
+
+        // Слагаме текущия в резултата
+        bfsOrder.push_back(current);
+    }
+}
+
+// Имплементация на БФС алгоритъма
+std::list<int> bfs(Graph &graph)
+{
+    std::unordered_set<int> visited;
+    std::list<int> bfsOrder;
+
+    for (int vertex : graph.getVertices())
+    {
+        // Докато има непосетени върхове в графа, ги посещаваме
+        if (visited.count(vertex) == 0)
+            bfsVisit(vertex, graph, visited, bfsOrder);
+    }
+
+    return bfsOrder;
+}
+
+bool listContains(const std::list<int> &l, int n)
+{
+    for (int element : l)
+    {
+        if (element == n)
+            return true;
+    }
+
+    return false;
+}
+
+// Намиране на всички пътища м/у два върха в граф, използвайки BFS обхождане
+std::list<std::list<int>> allPaths(int from, int to, Graph &graph)
+{
+    // Вместо опашка от върхове, ще пазим опашка от пътища, които ще градим
+    std::list<std::list<int>> pathsToVisit;
+    // Променлива, в която ще пазим всички намерене пътища
+    std::list<std::list<int>> allPaths;
+
+    // Започваме с един път, който се състои само от началния елемент
+    pathsToVisit.push_back({from});
+
+    while (!pathsToVisit.empty())
+    {
+        // На всяка стъпка вземаме текущия път
+        std::list<int> currentPath = pathsToVisit.front();
+        pathsToVisit.pop_front();
+
+        // И неговия последен връх
+        int lastVertex = currentPath.back();
+
+        // Ако сме стигнали целта, добавяме текущия път в резултата
+        if (lastVertex == to)
+        {
+            allPaths.push_back(currentPath);
+        }
+        else
+        {
+            // В противен случай създаваме нови пътища от текущия път, като добавяме наследниците на последния връх
+            for (int neighbor : graph.getAdjacent(lastVertex))
+            {
+                // Проверяваме дали вече сме минали през новия връх в текущия път
+                if (!listContains(currentPath, neighbor))
+                {
+                    std::list<int> newPath = currentPath;
+                    newPath.push_back(neighbor);
+
+                    pathsToVisit.push_back(newPath);
+                }
+            }
+        }
+    }
+
+    return allPaths;
+}
+
 int main()
 {
     Graph g;
@@ -134,7 +251,7 @@ int main()
 
     std::cout << std::endl;
 
-    // g.printDot();
+    g.printDot();
 
     std::cout << "{1, 2, 5} is a path in the graph: " << std::boolalpha << isPath({1, 2, 5}, g) << std::endl;
     std::cout << "{1, 4, 6, 8} is a path in the graph: " << std::boolalpha << isPath({1, 4, 6, 8}, g) << std::endl;
@@ -145,12 +262,22 @@ int main()
     std::list<int> dfsOrder = dfs(g);
 
     std::cout << "DFS order of the graph: ";
-    for (int v : dfsOrder)
-    {
-        std::cout << v << " ";
-    }
+    printList(dfsOrder);
 
-    std::cout << std::endl;
+    std::list<int> bfsOrder;
+    std::unordered_set<int> visited;
+    bfsVisit(1, g, visited, bfsOrder);
+
+    std::cout << "BFS order of the graph: ";
+    printList(bfsOrder);
+
+    std::list<std::list<int>> allPathsFrom4to5 = allPaths(4, 5, g);
+
+    std::cout << "All paths from 4 to 5: " << std::endl;
+    for (std::list<int> &path : allPathsFrom4to5)
+    {
+        printList(path);
+    }
 
     return 0;
 }
