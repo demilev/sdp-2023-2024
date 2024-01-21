@@ -235,7 +235,7 @@ void topoVisit(int vertex, Graph &graph, std::unordered_set<int> &visited, std::
     {
         if (visited.count(n) == 0)
         {
-            dfsVisit(n, graph, visited, topoSort);
+            topoVisit(n, graph, visited, topoSort);
         }
     }
 
@@ -257,6 +257,55 @@ std::list<int> topoSort(Graph &graph)
     }
 
     return topoSort;
+}
+
+// Функция, която проверява дали има цикъл в графа, започвайки от даден връх.
+// Работи на принципа на DFS.
+// Цикъл в графа има, ако докато обхождаме с DFS намерим ребро към връх, който е в процес на обхождане от DFS.
+// Затова функцията допълнително получава и множество от върхове, които са в процес на обхождане.
+bool isCyclicVisit(int vertex, Graph &graph, std::unordered_set<int> &visited, std::unordered_set<int> &recursionStack)
+{
+    visited.insert(vertex);
+    recursionStack.insert(vertex);
+
+    std::list<int> neighbours = graph.getAdjacent(vertex);
+
+    for (int n : neighbours)
+    {
+        // Ако има ребро към връх, който е в процес на обхождане, значи цикъл има.
+        if (recursionStack.count(n) > 0)
+        {
+            return true;
+        }
+
+        if (visited.count(n) == 0)
+        {
+            if (isCyclicVisit(n, graph, visited, recursionStack))
+            {
+                return true;
+            }
+        }
+    }
+
+    // След като сме обходили текущия връх, го махаме от множеството на върховете, които са в процес на обхождане
+    recursionStack.erase(vertex);
+    return false;
+}
+
+bool isCyclic(Graph &graph)
+{
+    std::unordered_set<int> visited;
+    std::unordered_set<int> recursionStack;
+
+    for (int vertex : graph.getVertices())
+    {
+        // Докато има непосетени върхове в графа, проверяваме дали има цикъл, започващ от тях
+        if (visited.count(vertex) == 0)
+            if (isCyclicVisit(vertex, graph, visited, recursionStack))
+                return true;
+    }
+
+    return false;
 }
 
 int main()
@@ -319,6 +368,8 @@ int main()
 
     std::cout << "Topological sorting of the graph: ";
     printList(topoOrder);
+
+    std::cout << "The graph has a cycle: " << std::boolalpha << isCyclic(g);
 
     return 0;
 }
